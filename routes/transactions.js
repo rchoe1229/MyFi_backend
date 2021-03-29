@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const knex = require("knex");
-const config = require("../knexfile").development;
-const database = knex(config);
+const database = require('../database/database')
 
-/* GET users listing. */
+const { Model } = require("objection")
+Model.knex(database)
+
+const Transactions = require("../models/Transactions")
+
+/* GET transactions listing. */
 router.get("/", (req, res, next) => {
-  database("users")
-    .then((users) => res.json({users}));
+  Transactions.query()
+    .then((transactions) => res.send({transactions}));
 });
 
-router.get('/:id')
 module.exports = router;
