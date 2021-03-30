@@ -89,7 +89,7 @@ function authenticate(req, res, next) {
   });
 }
 
-module.exports = [
-  router,
-  authenticate
-]
+module.exports = {
+  router: router,
+  authenticate: authenticate
+}
