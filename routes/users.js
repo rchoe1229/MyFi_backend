@@ -39,20 +39,20 @@ router.post("/users", (req, res) => {
 
 router.post("/login", (req, res) => {
   const { user } = req.body;
+
   database("users")
   .select()
   .where({ username: user.username })
   .first()
   .then(retrievedUser => {
-    console.log("retrievedUser", retrievedUser);
-    if (retrievedUser.id) throw new Error("No such user exists dawg");
+    if (!retrievedUser) throw new Error("IT was all a lie");
 
       return bcrypt.compare(user.password, retrievedUser.password);
     })
     .then((arePasswordsTheSame) => {
-      if (!arePasswordsTheSame) throw new Error("Wrong password home slice");
+      if (!arePasswordsTheSame) throw new Error("IT was all a lie");
 
-      res.json({ message: "We got a match!" });
+      res.json({ message: "You remembered!" });
     })
     .catch((error) => {
       res.json(error.message);
