@@ -5,7 +5,7 @@ const database = require("../database/database");
 const { Model } = require("objection");
 Model.knex(database);
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const { response } = require("express");
@@ -42,18 +42,31 @@ router.post("/login", (req, res) => {
   const { user } = req.body;
 
   database("users")
-  .select()
-  .where({ username: user.username })
-  .first()
-  .then(retrievedUser => {
-    if (!retrievedUser) throw new Error("IT was all a lie");
+    .select()
+    .where({ username: user.username })
+    .first()
+    .then((retrievedUser) => {
+      if (!retrievedUser) throw new Error("IT was all a lie");
 
-      return bcrypt.compare(user.password, retrievedUser.password);
+      return Promise.all([
+        bcrypt.compare(user.password, retrievedUser.password),
+        Promise.resolve(retrievedUser),
+      ]);
     })
-    .then((arePasswordsTheSame) => {
+    .then((results) => {
+      const arePasswordsTheSame = results[0];
+      const user = results[1];
+
       if (!arePasswordsTheSame) throw new Error("IT was all a lie");
 
-      res.json({ message: "You remembered!" });
+      const payload = { username: user.username}
+      const secret = "QUIET"
+
+      jwt.sign(payload, secret, (error, token) => {
+        if(error) throw new Error("Signing did not work")
+        res.json({ token });
+      })
+
     })
     .catch((error) => {
       res.json(error.message);
