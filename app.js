@@ -6,9 +6,11 @@ const logger = require("morgan");
 const cors = require("cors");
 // const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
 
 const usersRouter = require("./routes/users");
 const transactionsRouter = require("./routes/transactions");
+const authenticateRouter = require("./routes/authenticate");
 
 const app = express();
 
@@ -23,7 +25,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.use(bodyParser.json());
 
 app.use("/", usersRouter);
-app.use("/transactions", transactionsRouter);
+app.use("/", transactionsRouter);
+app.use("/", authenticateRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

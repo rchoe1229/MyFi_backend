@@ -8,7 +8,7 @@ Model.knex(database)
 const Transactions = require("../models/Transactions")
 
 /* GET transactions listing. */
-router.get("/", (req, res, next) => {
+router.get("/transactions", (req, res, next) => {
   Transactions.query()
     .then((transactions) => res.send({transactions}));
 });
