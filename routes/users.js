@@ -5,6 +5,7 @@ const database = require("../database/database");
 const { Model } = require("objection");
 Model.knex(database);
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken")
 
 const User = require("../models/User");
 const { response } = require("express");
