@@ -30,8 +30,8 @@ router.post("/sign-up", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  const { user } = req.body;
-
+  const  user  = req.body;
+  console.log(req.body);
   database("users")
     .select()
     .where({ username: user.username })

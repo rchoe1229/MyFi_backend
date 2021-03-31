@@ -14,4 +14,10 @@ router.get("/users", authenticate, (req, res) => {
   .then((users) => res.send({ users }));
 });
 
+router.get("/users/:id", authenticate, (req,res) => {
+  User.query().withGraphFetched("transactions")
+  .where({id: req.params.id})
+  .then((user) => res.send({ user }));
+})
+
 module.exports = router;
