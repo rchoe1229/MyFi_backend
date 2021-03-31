@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 router.post("/sign-up", (req, res) => {
-  const { user } = req.body;
+  const user = req.body;
   bcrypt
     .hash(user.password, 12)
     .then((hashedPassword) => {
