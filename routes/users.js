@@ -10,7 +10,8 @@ const User = require("../models/User");
 
 /* GET users listing. */
 router.get("/users", authenticate, (req, res) => {
-  User.query().then((users) => res.send({ users }));
+  User.query().withGraphFetched("transactions")
+  .then((users) => res.send({ users }));
 });
 
 module.exports = router;
