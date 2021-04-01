@@ -22,7 +22,13 @@ router.post("/sign-up", (req, res) => {
     })
     .then((users) => {
       const user = users[0];
-      res.json({ user });
+      const payload = { username: user.username };
+      const secret = "process.env.SECRET";
+
+      jwt.sign(payload, secret, (error, token) => {
+        if (error) throw new Error("Signing did not work");
+        res.json({ token, user });
+      });
     })
     .catch((error) => {
       res.json({ error: error.message });
@@ -31,7 +37,6 @@ router.post("/sign-up", (req, res) => {
 
 router.post("/login", (req, res) => {
   const  user  = req.body;
-  console.log(req.body);
   database("users")
     .select()
     .where({ username: user.username })
@@ -44,9 +49,9 @@ router.post("/login", (req, res) => {
         Promise.resolve(retrievedUser),
       ]);
     })
-    .then((results) => {
-      const arePasswordsTheSame = results[0];
-      const user = results[1];
+    .then((users) => {
+      const arePasswordsTheSame = users[0];
+      const user = users[1];
 
       if (!arePasswordsTheSame) throw new Error("IT was all a lie");
 
